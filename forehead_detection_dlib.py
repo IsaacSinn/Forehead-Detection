@@ -6,6 +6,7 @@ import threading
 from imutils import face_utils
 import math
 import sys
+import matplotlib.pyplot as plt
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -18,7 +19,8 @@ class forehead_detect():
         self.predictor = dlib.shape_predictor(dat_file)
         self.grey = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
         self.grey_blur = cv.GaussianBlur(self.grey, (5,5), 0)
-        self.edge = cv.Canny(self.grey_blur, 50, 75)
+        self.kernel = np.ones((5,5),np.uint8)
+
 
     @staticmethod
     def midpoint(ptA, ptB):
@@ -26,6 +28,10 @@ class forehead_detect():
 
     @staticmethod
     def distance(ptA, ptB):
+        pass
+
+    @staticmethod
+    def nothing(self):
         pass
 
     def detect(self, image):
@@ -61,26 +67,51 @@ class forehead_detect():
 
             # detect hairline
             hair_line = False
-            y_step = midpoint_y - 1
+            y_step = int(midpoint_y - 10)
             while not hair_line and y_step >= 0:
                 coordinate = np.array([x_subject(y_step), y_step])
+                print(f"coordinate: {coordinate}, value: {self.edge[int(y_step)][int(x_subject(y_step))]}")
 
-                if self.edge[int(x_subject(y_step))][int(y_step)]:
-                    cv.circle(image, (int(x_subject(y_step)), int(y_step)), 5, (0,255,0), -1)
+
+                if self.edge[int(y_step)][int(x_subject(y_step))] != [0]:
+                    cv.circle(image, (int(x_subject(y_step)), int(y_step)), 2, (255,0,0), -1)
                     hair_line = True
                 else:
                     y_step -= 1
-                    print(y_step)
-
-
+                    #print(y_step)
 
 
             # cv.imshow() display process
+            face_landmark = plt.imshow(self.edge)
             cv.imshow("face_landmark", image)
             cv.imshow("edge", self.edge)
+            plt.show()
 
-            if cv.waitKey(0):
+            if cv.waitKey(0) & 0xFF == 27:
                 break
+
+        cv.destroyAllWindows()
+
+    def adjust_parameter(self):
+        cv.namedWindow("Canny Edge Parameters")
+        cv.createTrackbar('High','Canny Edge Parameters',0,255,self.nothing)
+        cv.createTrackbar('Low','Canny Edge Parameters',0,255, self.nothing)
+
+        while(1):
+
+            if cv.waitKey(1) & 0xFF == 27:
+                break
+
+            # get trackbar position
+            High = cv.getTrackbarPos('High','Canny Edge Parameters')
+            Low = cv.getTrackbarPos('Low','Canny Edge Parameters')
+
+            self.edge = cv.Canny(self.grey_blur, Low, High)
+            #self.edge = cv.morphologyEx(self.edge, cv.MORPH_OPEN, self.kernel)
+            self.edge = cv.dilate(self.edge, self.kernel, iterations = 3)
+
+
+            cv.imshow("edge", self.edge)
 
         cv.destroyAllWindows()
 
@@ -91,6 +122,5 @@ if __name__ == '__main__':
     image =  cv.imread("chloe_stretched.png")
 
     forehead_detect = forehead_detect()
+    forehead_detect.adjust_parameter()
     forehead_detect.detect(image)
-    #cv_read = cv_read()
-    #cv_read.start()
