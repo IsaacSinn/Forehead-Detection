@@ -178,7 +178,7 @@ class forehead_detect():
             self.edge = cv.dilate(self.edge, self.kernel, iterations = 3)
 
             #display_edge = cv.resize(self.edge, (1920, 1080), interpolation = cv.INTER_AREA)
-            cv.imshow("edge", display_edge)
+            cv.imshow("edge", self.edge)
 
         cv.destroyAllWindows()
 
