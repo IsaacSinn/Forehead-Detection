@@ -45,6 +45,17 @@ class forehead_detect():
 
     def detect(self, image):
         self.image_size = image.shape[:2]
+
+        # if self.image_size[1] > 1920 or self.image_size[0] > 1920:
+        #
+        #     scale_percent = 60 # percent of original size
+        #     width = int(self.image_size[1] * scale_percent / 100)
+        #     height = int(self.image_size[0] * scale_percent / 100)
+        #     dim = (width, height)
+        #
+        #     image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
+        #     self.image_size = image.shape[:2]
+
         self.rects = self.detector(self.grey, 0)
 
         for rect in self.rects:
@@ -71,7 +82,7 @@ class forehead_detect():
             x_subject = lambda y: (y - y_intercept) / perp_gradient
 
             # draw line
-            increase_y = math.floor(self.image_size[1] - midpoint_y)
+            increase_y = math.floor(self.image_size[0] - midpoint_y)
             cv.line(image, (int(midpoint_x), int(midpoint_y)), (int(x_subject(midpoint_y - increase_y)), int(midpoint_y - increase_y)), (0, 255, 0), 2)
 
             # detect hairline
@@ -106,8 +117,6 @@ class forehead_detect():
             # cv.imshow() display process
             cv.imshow("face_landmark", image)
             cv.imshow("edge", self.edge)
-            # edge = plt.imshow(self.edge)
-            # plt.show()
 
             # normal_distribution
             self.display_normal_distribution()
@@ -149,8 +158,6 @@ class forehead_detect():
 
 
 
-
-
     def adjust_parameter(self):
         cv.namedWindow("Canny Edge Parameters")
         cv.createTrackbar('High','Canny Edge Parameters',0,255,self.nothing)
@@ -170,8 +177,8 @@ class forehead_detect():
             #self.edge = cv.morphologyEx(self.edge, cv.MORPH_OPEN, self.kernel)
             self.edge = cv.dilate(self.edge, self.kernel, iterations = 3)
 
-
-            cv.imshow("edge", self.edge)
+            #display_edge = cv.resize(self.edge, (1920, 1080), interpolation = cv.INTER_AREA)
+            cv.imshow("edge", display_edge)
 
         cv.destroyAllWindows()
 
