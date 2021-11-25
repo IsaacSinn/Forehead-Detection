@@ -186,7 +186,7 @@ class forehead_detect():
 
 # driver code
 if __name__ == '__main__':
-    image =  cv.imread("chloe.png")
+    image =  cv.imread("chloe_2.jpg")
 
     forehead_detect = forehead_detect()
     forehead_detect.adjust_parameter()
