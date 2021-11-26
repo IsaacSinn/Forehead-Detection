@@ -46,16 +46,6 @@ class forehead_detect():
     def detect(self, image):
         self.image_size = image.shape[:2]
 
-        # if self.image_size[1] > 1920 or self.image_size[0] > 1920:
-        #
-        #     scale_percent = 60 # percent of original size
-        #     width = int(self.image_size[1] * scale_percent / 100)
-        #     height = int(self.image_size[0] * scale_percent / 100)
-        #     dim = (width, height)
-        #
-        #     image = cv.resize(image, dim, interpolation = cv.INTER_AREA)
-        #     self.image_size = image.shape[:2]
-
         self.rects = self.detector(self.grey, 0)
 
         for rect in self.rects:
@@ -186,7 +176,7 @@ class forehead_detect():
 
 # driver code
 if __name__ == '__main__':
-    image =  cv.imread("chloe_2.jpg")
+    image =  cv.imread("julio.jpg")
 
     forehead_detect = forehead_detect()
     forehead_detect.adjust_parameter()
