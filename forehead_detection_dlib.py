@@ -35,7 +35,7 @@ class forehead_detect():
         return dist.euclidean(ptA, ptB)
 
     @staticmethod
-    def nothing(self):
+    def nothing():
         pass
 
     @staticmethod
@@ -176,7 +176,7 @@ class forehead_detect():
 
 # driver code
 if __name__ == '__main__':
-    image =  cv.imread("julio.jpg")
+    image =  cv.imread("neo.jpg")
 
     forehead_detect = forehead_detect()
     forehead_detect.adjust_parameter()
